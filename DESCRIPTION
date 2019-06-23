@@ -1,0 +1,30 @@
+Package: rucoin
+Title: R API to KuCoin Crytocurrency Exchange
+Version: 0.0.0.9000
+Authors@R: 
+  person(
+    given = "R. Dimas Bagas",
+    family = "Herlambang",
+    role = c("aut", "cre"),
+    email = "bagasbgy@gmail.com"
+  )
+Description: R API to KuCoin Crytocurrency Exchange for market data and market order.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
+Depends:
+  R (>= 3.5.0),
+  dplyr,
+  jsonlite,
+  lubridate
+Imports:
+  dplyr,
+  glue,
+  jsonlite,
+  lubridate,
+  magrittr,
+  purrr,
+  stringr,
+  tibble

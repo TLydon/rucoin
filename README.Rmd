@@ -1,0 +1,50 @@
+---
+output: github_document
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# rucoin
+
+An API to KuCoin KuCoin Crytocurrency Exchange.
+
+**Currently only supports for getting market data, and still in heavy development stage!**
+
+## Installation
+
+You can install the development version of `rucoin` using:
+
+```{r, eval=FALSE}
+# install.packages("devtools")
+devtools::install_github("bagasbgy/rucoin")
+```
+
+## Getting Started
+
+For getting market data, you can use `get_kucoin_prices()`:
+
+```{r example}
+# import library
+library(rucoin)
+
+# get one pair of symbol prices
+prices <- get_kucoin_prices(
+  symbols = "KCS/USDT",
+  from = ymd_hms("2019-06-01 00:00:00"),
+  to = ymd_hms("2019-06-02 00:00:00"),
+  frequency = "1 hour"
+)
+
+prices
+```
+
+## Further Development
+
+* API for market orders
