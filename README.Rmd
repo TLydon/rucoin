@@ -4,18 +4,21 @@ output: github_document
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  fig.align = "center",
+  out.width = "100%",
+  collapse = TRUE,
+  comment = "#>"
 )
 ```
 
 # rucoin
 
-An API to KuCoin KuCoin Crytocurrency Exchange.
+An API to KuCoin Crytocurrency Exchange data and market orders.
 
-**Currently only supports for getting market data, and still in heavy development stage!**
+**Currently only have supports for getting market data, and still in heavy development stage!**
 
 ## Installation
 

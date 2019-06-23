@@ -1,10 +1,10 @@
 
 # rucoin
 
-An API to KuCoin KuCoin Crytocurrency Exchange.
+An API to KuCoin Crytocurrency Exchange data and market orders.
 
-**Currently only supports for getting market data, and still in heavy
-development stage\!**
+**Currently only have supports for getting market data, and still in
+heavy development stage\!**
 
 ## Installation
 
@@ -22,22 +22,6 @@ For getting market data, you can use `get_kucoin_prices()`:
 ``` r
 # import library
 library(rucoin)
-#> Loading required package: dplyr
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
-#> Loading required package: jsonlite
-#> Loading required package: lubridate
-#> 
-#> Attaching package: 'lubridate'
-#> The following object is masked from 'package:base':
-#> 
-#>     date
 
 # get one pair of symbol prices
 prices <- get_kucoin_prices(
