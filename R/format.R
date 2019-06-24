@@ -1,7 +1,21 @@
 # input formatter ---------------------------------------------------------
 
 # convert conventional pair symbol to KuCoin's API standard
-prep_kucoin_symbols <- function(x) str_replace_all(x, "\\/", "\\-")
+prep_kucoin_symbols <- function(x, revert = FALSE) {
+
+  if (revert) {
+
+    x <- str_replace_all(x, "\\-", "\\/")
+
+  } else {
+
+    x <- str_replace_all(x, "\\/", "\\-")
+
+  }
+
+  x
+
+}
 
 # format input frequency
 prep_kucoin_frequency <- function(x) {

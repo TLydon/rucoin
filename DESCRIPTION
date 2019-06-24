@@ -20,11 +20,7 @@ Depends:
   jsonlite,
   lubridate
 Imports:
-  dplyr,
   glue,
-  jsonlite,
-  lubridate,
-  magrittr,
   purrr,
   stringr,
   tibble

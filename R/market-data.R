@@ -84,7 +84,7 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
       result$volume <- as.numeric(result$volume)
       result$turnover <- as.numeric(result$turnover)
 
-      result$symbol <-symbol
+      result$symbol <- prep_kucoin_symbols(symbol, revert = TRUE)
       result <- result[, c("symbol", "datetime", "open", "high", "low", "close", "volume", "turnover")]
       result <- result[order(result$datetime), ]
 

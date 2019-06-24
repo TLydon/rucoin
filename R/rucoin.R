@@ -7,7 +7,6 @@
 #'
 #' @importFrom glue glue
 #' @importFrom lubridate as_datetime
-#' @importFrom magrittr "%>%"
 #' @importFrom purrr set_names
 #' @importFrom stringr str_replace_all
 #' @importFrom tibble tibble

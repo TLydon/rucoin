@@ -17,7 +17,7 @@ get_kucoin_time <- function() {
 
   response <- fromJSON("https://api.kucoin.com/api/v1/timestamp")
 
-  result <- as_datetime(ceiling(response$data / 1000))
+  result <- as_datetime(floor(response$data / 1000))
 
   result
 
