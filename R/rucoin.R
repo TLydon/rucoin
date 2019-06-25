@@ -1,13 +1,14 @@
-#' @title `rucoin`: R API to KuCoin Crytocurrency Exchange
+# package description -----------------------------------------------------
+
+#' @title `rucoin`: An R API to KuCoin market data and market order
 #'
 #' @docType package
 #'
-#' @import dplyr
-#' @import jsonlite
 #'
+#' @importFrom dplyr case_when
 #' @importFrom glue glue
+#' @importFrom jsonlite fromJSON
 #' @importFrom lubridate as_datetime
-#' @importFrom purrr set_names
 #' @importFrom stringr str_replace_all
 #' @importFrom tibble tibble
 #' @importFrom tibble as_tibble

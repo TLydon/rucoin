@@ -17,7 +17,10 @@ prep_kucoin_symbols <- function(x, revert = FALSE) {
 
 }
 
-# format input frequency
+# formate date input
+prep_kucoin_datetime <- function(x) as.numeric(as_datetime(x))
+
+# format frequency input
 prep_kucoin_frequency <- function(x) {
 
   if (!(is.character(x) & length(x) == 1))

@@ -1,16 +1,18 @@
-# get market data ---------------------------------------------------------
+# get historical data -----------------------------------------------------
 
-#' @title Get current KuCoin API server time
+#' @title Get historical data from specified symbols
 #'
 #' @param symbols A `character` vector of one or more pair symbol.
-#' @param from A `date` or `datetime` object as a start of datetime range.
-#' @param to A `date` or `datetime` object as an end of datetime range.
+#' @param from A `character` with valid `date`/`datetime` format,
+#'  or `date`/`datetime` object as a start of datetime range.
+#' @param to A `character` with valid `date`/`datetime` format,
+#'  or `date`/`datetime` object as an end of datetime range.
 #' @param frequency A `character` vector of one which specify
-#'  the frequency option.
+#'  the frequency option, see details for further information.
 #'
 #' @details
 #'
-#'  List of supported frequencies:
+#'  There are several supported frequencies:
 #'
 #'  * `"1 minute"`
 #'  * `"3 minutes"`
@@ -36,45 +38,44 @@
 #' # get one pair of symbol prices
 #' prices <- get_kucoin_prices(
 #'   symbols = "KCS/USDT",
-#'   from = ymd_hms("2019-06-01 00:00:00"),
-#'   to = ymd_hms("2019-06-02 00:00:00"),
+#'   from = "2019-06-01 00:00:00",
+#'   to = "2019-06-02 00:00:00",
 #'   frequency = "1 hour"
 #' )
 #'
+#' # quick check
 #' prices
 #'
 #' # get multiple pair of symbols prices
 #' prices <- get_kucoin_prices(
 #'   symbols = c("KCS/USDT", "BTC/USDT", "KCS/BTC"),
-#'   from = ymd_hms("2019-06-01 00:00:00"),
-#'   to = ymd_hms("2019-06-02 00:00:00"),
+#'   from = "2019-06-01 00:00:00",
+#'   to = "2019-06-02 00:00:00",
 #'   frequency = "1 hour"
 #' )
 #'
+#' # quick check
 #' prices
 #'
 #' @export
 
 get_kucoin_prices <- function(symbols, from, to, frequency) {
 
-  base_url <- "https://api.kucoin.com/api/v1/market/candles?"
-
-  from <- as.numeric(as_datetime(from))
-  to <- as.numeric(as_datetime(to))
-
-  symbols <- prep_kucoin_symbols(symbols)
-  frequency <- prep_kucoin_frequency(frequency)
-
   if (length(symbols) > 1) {
 
-    results <- tibble()
+    results <- data.frame()
 
     for (symbol in symbols) {
 
-      response <- fromJSON(glue("{base_url}symbol={symbol}&startAt={from}&endAt={to}&type={frequency}"))
+      response <- query_klines(
+        symbol = prep_kucoin_symbols(symbol),
+        startAt = prep_kucoin_datetime(from),
+        endAt = prep_kucoin_datetime(to),
+        type = prep_kucoin_frequency(frequency)
+      )
 
-      result <- as_tibble(response$data, .name_repair = "minimal")
-      result <- set_names(result, c("datetime", "open", "close", "high", "low", "volume", "turnover"))
+      result <- as.data.frame(response$data)
+      colnames(result) <- c("datetime", "open", "close", "high", "low", "volume", "turnover")
 
       result$datetime <- as_datetime(as.numeric(result$datetime))
       result$open <- as.numeric(result$open)
@@ -84,20 +85,25 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
       result$volume <- as.numeric(result$volume)
       result$turnover <- as.numeric(result$turnover)
 
-      result$symbol <- prep_kucoin_symbols(symbol, revert = TRUE)
+      result$symbol <- symbol
       result <- result[, c("symbol", "datetime", "open", "high", "low", "close", "volume", "turnover")]
       result <- result[order(result$datetime), ]
 
-      results <- bind_rows(results, result)
+      results <- rbind(results, result)
 
     }
 
   } else {
 
-    response <- fromJSON(glue("{base_url}symbol={symbols}&startAt={from}&endAt={to}&type={frequency}"))
+    response <- query_klines(
+      symbol = prep_kucoin_symbols(symbols),
+      startAt = prep_kucoin_datetime(from),
+      endAt = prep_kucoin_datetime(to),
+      type = prep_kucoin_frequency(frequency)
+    )
 
-    results <- as_tibble(response$data, .name_repair = "minimal")
-    results <- set_names(results, c("datetime", "open", "close", "high", "low", "volume", "turnover"))
+    results <- as.data.frame(response$data)
+    colnames(results) <- c("datetime", "open", "close", "high", "low", "volume", "turnover")
 
     results$datetime <- as_datetime(as.numeric(results$datetime))
     results$open <- as.numeric(results$open)
@@ -111,6 +117,8 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
     results <- results[order(results$datetime), ]
 
   }
+
+  results <- as_tibble(results)
 
   results
 
