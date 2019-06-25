@@ -74,7 +74,7 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
         type = prep_kucoin_frequency(frequency)
       )
 
-      result <- as.data.frame(response$data)
+      result <- as_tibble(response$data)
       colnames(result) <- c("datetime", "open", "close", "high", "low", "volume", "turnover")
 
       result$datetime <- as_datetime(as.numeric(result$datetime))
@@ -102,7 +102,7 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
       type = prep_kucoin_frequency(frequency)
     )
 
-    results <- as.data.frame(response$data)
+    results <- as_tibble(response$data)
     colnames(results) <- c("datetime", "open", "close", "high", "low", "volume", "turnover")
 
     results$datetime <- as_datetime(as.numeric(results$datetime))
@@ -117,8 +117,6 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
     results <- results[order(results$datetime), ]
 
   }
-
-  results <- as_tibble(results)
 
   results
 
