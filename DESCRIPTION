@@ -17,11 +17,8 @@ RoxygenNote: 6.1.1
 Depends:
   R (>= 3.5.0)
 Imports:
-  dplyr,
   glue,
   jsonlite,
-  lubridate,
-  stringr,
   tibble
-Suggests: 
-    testthat (>= 2.1.0)
+Suggests:
+  testthat (>= 2.1.0)

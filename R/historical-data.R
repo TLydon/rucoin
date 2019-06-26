@@ -20,11 +20,11 @@
 #'  * `"15 minutes"`
 #'  * `"30 minutes"`
 #'  * `"1 hour"`
-#'  * `"2 hour"`
-#'  * `"4 hour"`
-#'  * `"6 hour"`
-#'  * `"8 hour"`
-#'  * `"12 hour"`
+#'  * `"2 hours"`
+#'  * `"4 hours"`
+#'  * `"6 hours"`
+#'  * `"8 hours"`
+#'  * `"12 hours"`
 #'  * `"1 day"`
 #'  * `"1 week"`
 #'
@@ -63,30 +63,19 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
 
   if (length(symbols) > 1) {
 
-    results <- data.frame()
+    results <- tibble()
 
     for (symbol in symbols) {
 
-      response <- query_klines(
+      result <- query_klines(
         symbol = prep_kucoin_symbols(symbol),
         startAt = prep_kucoin_datetime(from),
         endAt = prep_kucoin_datetime(to),
         type = prep_kucoin_frequency(frequency)
       )
 
-      result <- as_tibble(response$data)
-      colnames(result) <- c("datetime", "open", "close", "high", "low", "volume", "turnover")
-
-      result$datetime <- as_datetime(as.numeric(result$datetime))
-      result$open <- as.numeric(result$open)
-      result$high <- as.numeric(result$high)
-      result$low <- as.numeric(result$low)
-      result$close <- as.numeric(result$close)
-      result$volume <- as.numeric(result$volume)
-      result$turnover <- as.numeric(result$turnover)
-
       result$symbol <- symbol
-      result <- result[, c("symbol", "datetime", "open", "high", "low", "close", "volume", "turnover")]
+      result <- result[, c("symbol", "datetime", "open", "close", "high", "low", "volume", "turnover")]
       result <- result[order(result$datetime), ]
 
       results <- rbind(results, result)
@@ -95,26 +84,12 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
 
   } else {
 
-    response <- query_klines(
+    results <- query_klines(
       symbol = prep_kucoin_symbols(symbols),
       startAt = prep_kucoin_datetime(from),
       endAt = prep_kucoin_datetime(to),
       type = prep_kucoin_frequency(frequency)
     )
-
-    results <- as_tibble(response$data)
-    colnames(results) <- c("datetime", "open", "close", "high", "low", "volume", "turnover")
-
-    results$datetime <- as_datetime(as.numeric(results$datetime))
-    results$open <- as.numeric(results$open)
-    results$high <- as.numeric(results$high)
-    results$low <- as.numeric(results$low)
-    results$close <- as.numeric(results$close)
-    results$volume <- as.numeric(results$volume)
-    results$turnover <- as.numeric(results$turnover)
-
-    results <- results[, c("datetime", "open", "high", "low", "close", "volume", "turnover")]
-    results <- results[order(results$datetime), ]
 
   }
 

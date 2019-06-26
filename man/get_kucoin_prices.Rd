@@ -33,11 +33,11 @@ There are several supported frequencies:
 \item \code{"15 minutes"}
 \item \code{"30 minutes"}
 \item \code{"1 hour"}
-\item \code{"2 hour"}
-\item \code{"4 hour"}
-\item \code{"6 hour"}
-\item \code{"8 hour"}
-\item \code{"12 hour"}
+\item \code{"2 hours"}
+\item \code{"4 hours"}
+\item \code{"6 hours"}
+\item \code{"8 hours"}
+\item \code{"12 hours"}
 \item \code{"1 day"}
 \item \code{"1 week"}
 }

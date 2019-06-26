@@ -17,7 +17,7 @@ get_kucoin_time <- function() {
 
   response <- fromJSON("https://api.kucoin.com/api/v1/timestamp")
 
-  result <- as_datetime(floor(response$data / 1000))
+  result <- as.POSIXct(floor(response$data / 1000), origin = "1970-01-01 00:00:00 UTC", tz = "UTC")
 
   result
 

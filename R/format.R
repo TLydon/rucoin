@@ -5,11 +5,11 @@ prep_kucoin_symbols <- function(x, revert = FALSE) {
 
   if (revert) {
 
-    x <- str_replace_all(x, "\\-", "\\/")
+    x <- gsub("\\-", "\\/", x)
 
   } else {
 
-    x <- str_replace_all(x, "\\/", "\\-")
+    x <- gsub("\\/", "\\-", x)
 
   }
 
@@ -18,7 +18,7 @@ prep_kucoin_symbols <- function(x, revert = FALSE) {
 }
 
 # formate date input
-prep_kucoin_datetime <- function(x) as.numeric(as_datetime(x))
+prep_kucoin_datetime <- function(x) as.numeric(as.POSIXct(x, tz = "UTC"))
 
 # format frequency input
 prep_kucoin_frequency <- function(x) {
@@ -26,23 +26,26 @@ prep_kucoin_frequency <- function(x) {
   if (!(is.character(x) & length(x) == 1))
     stop("Unsupported frequency! See function documentation for helps")
 
-  x <- case_when(
-    x == "1 minute" ~ "1min",
-    x == "3 minutes" ~ "3min",
-    x == "5 minutes" ~ "5min",
-    x == "15 minutes" ~ "15min",
-    x == "30 minutes" ~ "30min",
-    x == "1 hour" ~ "1hour",
-    x == "2 hour" ~ "2hour",
-    x == "4 hour" ~ "4hour",
-    x == "6 hour" ~ "6hour",
-    x == "8 hour" ~ "8hour",
-    x == "12 hour" ~ "12hour",
-    x == "1 day" ~ "1day",
-    x == "1 week" ~ "1week"
+  lookup <- tribble(
+    ~x, ~y,
+    "1 minute", "1min",
+    "3 minutes", "3min",
+    "5 minutes", "5min",
+    "15 minutes", "15min",
+    "30 minutes", "30min",
+    "1 hour", "1hour",
+    "2 hours", "2hour",
+    "4 hours", "4hour",
+    "6 hours", "6hour",
+    "8 hours", "8hour",
+    "12 hours", "12hour",
+    "1 day", "1day",
+    "1 week", "1week"
   )
 
-  if (is.na(x))
+  x <- lookup$y[lookup$x == x]
+
+  if (length(x) == 0)
     stop("Unsupported frequency! See function documentation for helps")
 
   x
