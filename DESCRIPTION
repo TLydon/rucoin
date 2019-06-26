@@ -17,6 +17,7 @@ RoxygenNote: 6.1.1
 Depends:
   R (>= 3.5.0)
 Imports:
+  curl,
   glue,
   jsonlite,
   tibble
