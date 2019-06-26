@@ -1,10 +1,11 @@
 
 # rucoin
 
-An R API to KuCoin Crytocurrency market data and market orders.
+<!-- badges: start -->
 
-**Currently only have supports for getting market data, and still in
-heavy development stage\!**
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+<!-- badges: end -->
 
 ## Installation
 
@@ -24,7 +25,7 @@ First of all, let’s start by importing the library:
 library(rucoin)
 ```
 
-### Historical Data
+### Market Data
 
 For getting historical data, you can use `get_kucoin_prices()`:
 
@@ -83,6 +84,33 @@ prices
 #>  9 KCS/USDT 2019-06-01 08:00:00  1.18  1.20  1.17  1.20 651853.  773753.
 #> 10 KCS/USDT 2019-06-01 09:00:00  1.2   1.22  1.20  1.21 454741.  550390.
 #> # … with 62 more rows
+```
+
+You can also get the most recent metadata for all symbols using
+`get_kucoin_symbols()`:
+
+``` r
+# get all symbols' most recent metadata
+metadata <- get_kucoin_symbols()
+
+# quick check
+metadata
+#> # A tibble: 429 x 13
+#>    symbol name  enable_trading base_currency quote_currency base_min_size
+#>    <chr>  <chr> <lgl>          <chr>         <chr>                  <dbl>
+#>  1 ACAT-… ACAT… TRUE           ACAT          BTC                    100  
+#>  2 ACAT-… ACAT… TRUE           ACAT          ETH                    100  
+#>  3 ACT-B… ACT-… TRUE           ACT           BTC                      1  
+#>  4 ACT-E… ACT-… TRUE           ACT           ETH                      1  
+#>  5 ADB-B… ADB-… TRUE           ADB           BTC                     10  
+#>  6 ADB-E… ADB-… TRUE           ADB           ETH                     10  
+#>  7 AERGO… AERG… TRUE           AERGO         BTC                      0.1
+#>  8 AERGO… AERG… TRUE           AERGO         ETH                      0.1
+#>  9 AGI-B… AGI-… TRUE           AGI           BTC                      1  
+#> 10 AGI-E… AGI-… TRUE           AGI           ETH                      1  
+#> # … with 419 more rows, and 7 more variables: quote_min_size <dbl>,
+#> #   base_max_size <dbl>, quote_max_size <dbl>, base_increment <dbl>,
+#> #   quote_increment <dbl>, price_increment <dbl>, fee_currency <chr>
 ```
 
 ## Further Development

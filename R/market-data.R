@@ -75,7 +75,9 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
       )
 
       result$symbol <- symbol
+
       result <- result[, c("symbol", "datetime", "open", "high", "low", "close", "volume", "turnover")]
+
       result <- result[order(result$datetime), ]
 
       results <- rbind(results, result)
@@ -92,6 +94,50 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
     )
 
   }
+
+  results
+
+}
+
+# market metadata ---------------------------------------------------------
+
+#' @title Get all symbols' most recent metadata
+#'
+#' @return A `tibble` containing some metadata
+#'
+#' @examples
+#' # import library
+#' library(rucoin)
+#'
+#' # get all symbols' most recent metadata
+#' metadata <- get_kucoin_symbols()
+#'
+#' # quick check
+#' metadata
+#'
+#' @export
+
+get_kucoin_symbols <- function() {
+
+  response <- fromJSON("https://api.kucoin.com/api/v1/symbols")
+
+  results <- as_tibble(response$data)
+
+  colnames(results) <- c("symbol", "quote_max_size", "enable_trading", "price_increment",
+                         "fee_currency", "base_max_size", "base_currency", "quote_currency",
+                         "market", "quote_increment", "base_min_size", "quote_min_size",
+                         "name", "base_increment")
+
+  results <- results[, c("symbol", "name", "enable_trading",
+                         "base_currency", "quote_currency",
+                         "base_min_size", "quote_min_size",
+                         "base_max_size", "quote_max_size",
+                         "base_increment", "quote_increment",
+                         "price_increment", "fee_currency")]
+
+  results[, 6:12] <- lapply(results[, 6:12], as.numeric)
+
+  results <- results[order(results$base_currency, results$quote_currency), ]
 
   results
 

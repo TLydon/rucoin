@@ -16,9 +16,9 @@ knitr::opts_chunk$set(
 
 # rucoin
 
-An R API to KuCoin Crytocurrency market data and market orders.
-
-**Currently only have supports for getting market data, and still in heavy development stage!**
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+<!-- badges: end -->
 
 ## Installation
 
@@ -38,7 +38,7 @@ First of all, let's start by importing the library:
 library(rucoin)
 ```
 
-### Historical Data
+### Market Data
 
 For getting historical data, you can use `get_kucoin_prices()`:
 
@@ -68,6 +68,16 @@ prices <- get_kucoin_prices(
 
 # quick check
 prices
+```
+
+You can also get the most recent metadata for all symbols using `get_kucoin_symbols()`:
+
+```{r}
+# get all symbols' most recent metadata
+metadata <- get_kucoin_symbols()
+
+# quick check
+metadata
 ```
 
 ## Further Development
