@@ -137,6 +137,8 @@ get_kucoin_symbols <- function() {
 
   results[, 6:12] <- lapply(results[, 6:12], as.numeric)
 
+  results[, 1:2] <- lapply(results[, 1:2], prep_kucoin_symbols, revert = TRUE)
+
   results <- results[order(results$base_currency, results$quote_currency), ]
 
   results
