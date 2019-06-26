@@ -75,7 +75,7 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
       )
 
       result$symbol <- symbol
-      result <- result[, c("symbol", "datetime", "open", "close", "high", "low", "volume", "turnover")]
+      result <- result[, c("symbol", "datetime", "open", "high", "low", "close", "volume", "turnover")]
       result <- result[order(result$datetime), ]
 
       results <- rbind(results, result)
