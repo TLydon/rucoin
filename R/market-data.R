@@ -61,19 +61,35 @@
 
 get_kucoin_prices <- function(symbols, from, to, frequency) {
 
-  # get result for multiple symbols
+  # get datetime ranges
+  times <- prep_datetime_range(
+    from = as.POSIXct(from, tz = "UTC"),
+    to = as.POSIXct(to, tz = "UTC"),
+    frequency = frequency
+  )
+
+    # get result for multiple symbols
   if (length(symbols) > 1) {
 
     results <- tibble()
 
     for (symbol in symbols) {
 
-      result <- query_klines(
-        symbol = prep_kucoin_symbols(symbol),
-        startAt = prep_kucoin_datetime(from),
-        endAt = prep_kucoin_datetime(to),
-        type = prep_kucoin_frequency(frequency)
-      )
+      # get queried results
+      result <- tibble()
+
+      for (i in 1:nrow(times)) {
+
+        queried <- query_klines(
+          symbol = prep_symbols(symbol),
+          startAt = prep_datetime(times$from[i]),
+          endAt = prep_datetime(times$to[i]),
+          type = prep_frequency(frequency)
+        )
+
+        result <- rbind(result, queried)
+
+      }
 
       result$symbol <- symbol
 
@@ -88,12 +104,21 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
   # get result for one symbols
   } else {
 
-    results <- query_klines(
-      symbol = prep_kucoin_symbols(symbols),
-      startAt = prep_kucoin_datetime(from),
-      endAt = prep_kucoin_datetime(to),
-      type = prep_kucoin_frequency(frequency)
-    )
+    # get queried results
+    results <- tibble()
+
+    for (i in 1:nrow(times)) {
+
+      result <- query_klines(
+        symbol = prep_symbols(symbols),
+        startAt = prep_datetime(times$from[i]),
+        endAt = prep_datetime(times$to[i]),
+        type = prep_frequency(frequency)
+      )
+
+      results <- rbind(results, result)
+
+    }
 
   }
 
@@ -122,9 +147,20 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
 
 get_kucoin_symbols <- function() {
 
-  response <- fromJSON("https://api.kucoin.com/api/v1/symbols")
+  # get endpoint
+  endpoint <- get_endpoint("symbols")
 
-  results <- as_tibble(response$data, .name_repair = "minimal")
+  # get server response
+  response <- GET(glue("{endpoint}"))
+
+  # analyze response
+  response <- analyze_response(response)
+
+  # parse json result
+  parsed <- fromJSON(content(response, "text"))
+
+  # tidy the parsed data
+  results <- as_tibble(parsed$data, .name_repair = "minimal")
 
   colnames(results) <- c("symbol", "quote_max_size", "enable_trading", "price_increment",
                          "fee_currency", "base_max_size", "base_currency", "quote_currency",
@@ -140,10 +176,11 @@ get_kucoin_symbols <- function() {
 
   results[, 6:12] <- lapply(results[, 6:12], as.numeric)
 
-  results[, 1:2] <- lapply(results[, 1:2], prep_kucoin_symbols, revert = TRUE)
+  results[, 1:2] <- lapply(results[, 1:2], prep_symbols, revert = TRUE)
 
   results <- results[order(results$base_currency, results$quote_currency), ]
 
+  # return the result
   results
 
 }

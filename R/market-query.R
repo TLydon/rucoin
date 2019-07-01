@@ -4,7 +4,7 @@
 query_klines <- function(symbol, startAt, endAt, type) {
 
   # get endpoint
-  endpoint <- get_kucoin_endpoint("klines")
+  endpoint <- get_endpoint("klines")
 
   # get server response
   response <- GET(glue("{endpoint}?symbol={symbol}&startAt={startAt}&endAt={endAt}&type={type}"))

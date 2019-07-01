@@ -16,7 +16,7 @@
 get_kucoin_time <- function() {
 
   # get endpoint url
-  endpoint <- get_kucoin_endpoint("time")
+  endpoint <- get_endpoint("time")
 
   # get server response
   response <- GET(glue("{endpoint}"))
