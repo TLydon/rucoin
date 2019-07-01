@@ -15,10 +15,22 @@
 
 get_kucoin_time <- function() {
 
-  response <- fromJSON("https://api.kucoin.com/api/v1/timestamp")
+  # get endpoint url
+  endpoint <- get_kucoin_endpoint("time")
 
-  result <- as.POSIXct(floor(response$data / 1000), origin = "1970-01-01 00:00:00 UTC", tz = "UTC")
+  # get server response
+  response <- GET(glue("{endpoint}"))
 
-  result
+  # analyze response
+  response <- analyze_response(response)
+
+  # parse json result
+  parsed <- fromJSON(content(response, "text"))
+
+  # convert to proper datetime
+  results <- as.POSIXct(floor(parsed$data / 1000), origin = "1970-01-01 00:00:00 UTC", tz = "UTC")
+
+  # return the results
+  results
 
 }

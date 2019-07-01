@@ -19,6 +19,7 @@ Depends:
 Imports:
   curl,
   glue,
+  httr,
   jsonlite,
   tibble
 Suggests:

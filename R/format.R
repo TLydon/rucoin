@@ -23,8 +23,11 @@ prep_kucoin_datetime <- function(x) as.numeric(as.POSIXct(x, tz = "UTC"))
 # format frequency input
 prep_kucoin_frequency <- function(x) {
 
-  if (!(is.character(x) & length(x) == 1))
+  if (!(is.character(x) & length(x) == 1)) {
+
     stop("Unsupported frequency! See function documentation for helps")
+
+  }
 
   lookup <- tribble(
     ~x, ~y,
@@ -45,8 +48,11 @@ prep_kucoin_frequency <- function(x) {
 
   x <- lookup$y[lookup$x == x]
 
-  if (length(x) == 0)
+  if (length(x) == 0) {
+
     stop("Unsupported frequency! See function documentation for helps")
+
+  }
 
   x
 

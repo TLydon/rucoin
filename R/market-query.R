@@ -3,11 +3,20 @@
 # query klines data
 query_klines <- function(symbol, startAt, endAt, type) {
 
-  query_string <- glue("https://api.kucoin.com/api/v1/market/candles?symbol={symbol}&startAt={startAt}&endAt={endAt}&type={type}")
+  # get endpoint
+  endpoint <- get_kucoin_endpoint("klines")
 
-  response <- fromJSON(query_string)
+  # get server response
+  response <- GET(glue("{endpoint}?symbol={symbol}&startAt={startAt}&endAt={endAt}&type={type}"))
 
-  results <- as_tibble(response$data)
+  # analyze response
+  response <- analyze_response(response)
+
+  # parse json result
+  parsed <- fromJSON(content(response, "text"))
+
+  # tidy the parsed data
+  results <- as_tibble(parsed$data, .name_repair = "minimal")
 
   colnames(results) <- c("datetime", "open", "close", "high", "low", "volume", "turnover")
 
@@ -19,6 +28,7 @@ query_klines <- function(symbol, startAt, endAt, type) {
 
   results <- results[order(results$datetime), ]
 
+  # return the result
   results
 
 }

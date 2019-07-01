@@ -61,6 +61,7 @@
 
 get_kucoin_prices <- function(symbols, from, to, frequency) {
 
+  # get result for multiple symbols
   if (length(symbols) > 1) {
 
     results <- tibble()
@@ -84,6 +85,7 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
 
     }
 
+  # get result for one symbols
   } else {
 
     results <- query_klines(
@@ -95,6 +97,7 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
 
   }
 
+  # return the result
   results
 
 }
@@ -121,7 +124,7 @@ get_kucoin_symbols <- function() {
 
   response <- fromJSON("https://api.kucoin.com/api/v1/symbols")
 
-  results <- as_tibble(response$data)
+  results <- as_tibble(response$data, .name_repair = "minimal")
 
   colnames(results) <- c("symbol", "quote_max_size", "enable_trading", "price_increment",
                          "fee_currency", "base_max_size", "base_currency", "quote_currency",
