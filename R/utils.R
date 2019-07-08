@@ -28,7 +28,7 @@ get_kucoin_time <- function() {
   parsed <- fromJSON(content(response, "text"))
 
   # convert to proper datetime
-  results <- as.POSIXct(floor(parsed$data / 1000), origin = "1970-01-01 00:00:00 UTC", tz = "UTC")
+  results <- as_datetime(floor(parsed$data / 1000))
 
   # return the results
   results

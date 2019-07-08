@@ -42,14 +42,26 @@ prep_symbols <- function(x, revert = FALSE) {
 }
 
 # formate date input
-prep_datetime <- function(x) as.numeric(as.POSIXct(x, tz = "UTC"))
+prep_datetime <- function(x) {
+
+  x <- as.numeric(x)
+
+  if (nchar(as.character(x)) > 10) {
+
+    x <- floor(x)
+
+  }
+
+  x
+
+}
 
 # format frequency input
 prep_frequency <- function(x) {
 
   if (!(is.character(x) & length(x) == 1)) {
 
-    stop("Unsupported frequency! See function documentation for helps")
+    stop("Frequency should be a character vector with length equal to one")
 
   }
 
@@ -84,6 +96,10 @@ prep_frequency <- function(x) {
 
 prep_datetime_range <- function(from, to, frequency) {
 
+  # readjust input
+  from <- floor_date(from, frequency)
+  to <- ceiling_date(to, frequency)
+
   # prepare frequency lookup table
   lkp <- tribble(
     ~frequency, ~num, ~chr,
@@ -107,24 +123,24 @@ prep_datetime_range <- function(from, to, frequency) {
   chr <- lkp$chr[lkp$frequency == frequency]
 
   # calculate time difference
-  timediff <- difftime(
+  timelength <- difftime(
     time1 = to,
     time2 = from,
     units = chr
   )
 
-  timelength <- as.numeric(timediff) / num
+  timelength <- floor(as.numeric(timelength) / num) + 1
 
   # create time sequence
   timeseq <- seq.POSIXt(from, by = paste(num, chr), length.out = timelength)
 
   # prepare time range lookup table
-  start_index <- c(1, c(1:timelength)[1:timelength %% 1500 == 0])
+  start_index <- c(1, c(2:timelength)[2:timelength %% 1500 == 0])
   end_index <- c(start_index[-1] - 1, timelength)
 
   results <- tibble(
     from = timeseq[start_index],
-    to = timeseq[end_index] + 1
+    to = timeseq[end_index]
   )
 
   # return the results

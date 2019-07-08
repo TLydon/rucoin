@@ -24,7 +24,7 @@ query_klines <- function(symbol, startAt, endAt, type) {
 
   results[, 1:7] <- lapply(results[, 1:7], as.numeric)
 
-  results$datetime <- as.POSIXct(results$datetime, origin = "1970-01-01 00:00:00 UTC", tz = "UTC")
+  results$datetime <- as_datetime(results$datetime)
 
   results <- results[order(results$datetime), ]
 

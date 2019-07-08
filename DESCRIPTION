@@ -21,6 +21,7 @@ Imports:
   glue,
   httr,
   jsonlite,
+  lubridate,
   tibble
 Suggests:
   testthat (>= 2.1.0)

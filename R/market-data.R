@@ -63,12 +63,12 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
 
   # get datetime ranges
   times <- prep_datetime_range(
-    from = as.POSIXct(from, tz = "UTC"),
-    to = as.POSIXct(to, tz = "UTC"),
+    from = as_datetime(from),
+    to = as_datetime(to),
     frequency = frequency
   )
 
-    # get result for multiple symbols
+  # get result for multiple symbols
   if (length(symbols) > 1) {
 
     results <- tibble()
