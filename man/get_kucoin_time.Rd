@@ -4,7 +4,11 @@
 \alias{get_kucoin_time}
 \title{Get current KuCoin API server time}
 \usage{
-get_kucoin_time()
+get_kucoin_time(raw = FALSE)
+}
+\arguments{
+\item{raw}{A \code{logical} vector to specify whether
+to return a raw results or not. The default is \code{FALSE}.}
 }
 \value{
 A \code{datetime} object

@@ -94,6 +94,7 @@ prep_frequency <- function(x) {
 
 }
 
+# prepare datetime range
 prep_datetime_range <- function(from, to, frequency) {
 
   # readjust input
@@ -150,25 +151,35 @@ prep_datetime_range <- function(from, to, frequency) {
 
 # api base data -----------------------------------------------------------
 
-# endpoints urls lookup
-get_endpoint <- function(endpoint) {
+# paths/endpoints urls lookup
+get_base_url <- function() {
 
-  # base api url
-  base_url <- "https://api.kucoin.com/api/v1/"
+  # specify base url
+  results <- "https://api.kucoin.com/"
+
+  # return the result
+  results
+
+}
+
+# paths/endpoints urls lookup
+get_paths <- function(x, type = "path") {
 
   # lookup table
   lkp <- tribble(
-    ~endpoint, ~path,
-    "klines", "market/candles",
-    "symbols", "symbols",
-    "time", "timestamp"
+    ~x, ~endpoint, ~path,
+    "accounts", "/api/v1/accounts", "api/v1/accounts",
+    "klines", "/api/v1/market/candles", "api/v1/market/candles",
+    "orders", "/api/v1/orders", "api/v1/orders",
+    "symbols", "/api/v1/symbols", "api/v1/symbols",
+    "time", "/api/v1/timestamp", "api/v1/timestamp"
   )
 
-  # get specified endpoint
-  path <- lkp$path[lkp$endpoint == endpoint]
+  # convert to data frame
+  lkp <- as.data.frame(lkp)
 
-  # combine with base url
-  results <- glue("{base_url}{path}")
+  # get specified endpoint
+  results <- lkp[lkp$x == x, type]
 
   # return the result
   results

@@ -80,7 +80,7 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
 
       for (i in 1:nrow(times)) {
 
-        queried <- query_klines(
+        queried <- get_klines(
           symbol = prep_symbols(symbol),
           startAt = prep_datetime(times$from[i]),
           endAt = prep_datetime(times$to[i]),
@@ -109,7 +109,7 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
 
     for (i in 1:nrow(times)) {
 
-      result <- query_klines(
+      result <- get_klines(
         symbol = prep_symbols(symbols),
         startAt = prep_datetime(times$from[i]),
         endAt = prep_datetime(times$to[i]),
@@ -121,6 +121,48 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
     }
 
   }
+
+  # return the result
+  results
+
+}
+
+# query klines (prices) data
+get_klines <- function(symbol, startAt, endAt, type) {
+
+  # list all query params
+  get_query <- list(
+    symbol = symbol,
+    startAt = startAt,
+    endAt = endAt,
+    type = type
+  )
+
+  # get server response
+  response <- GET(
+    url = get_base_url(),
+    path = get_paths("klines"),
+    query = get_query
+  )
+
+  # analyze response
+  response <- analyze_response(response)
+
+  # parse json result
+  parsed <- fromJSON(content(response, "text"))
+
+  # tidy the parsed data
+  results <- as_tibble(parsed$data, .name_repair = "minimal")
+
+  colnames(results) <- c("datetime", "open", "close", "high", "low", "volume", "turnover")
+
+  results <- results[, c("datetime", "open", "high", "low", "close", "volume", "turnover")]
+
+  results[, 1:7] <- lapply(results[, 1:7], as.numeric)
+
+  results$datetime <- as_datetime(results$datetime)
+
+  results <- results[order(results$datetime), ]
 
   # return the result
   results
@@ -147,11 +189,11 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
 
 get_kucoin_symbols <- function() {
 
-  # get endpoint
-  endpoint <- get_endpoint("symbols")
-
   # get server response
-  response <- GET(glue("{endpoint}"))
+  response <- GET(
+    url = get_base_url(),
+    path = get_paths("symbols")
+  )
 
   # analyze response
   response <- analyze_response(response)

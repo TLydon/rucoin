@@ -26,8 +26,8 @@ knitr::opts_chunk$set(
 You can install the development version of `rucoin` using:
 
 ```{r, eval=FALSE}
-# install.packages("devtools")
-devtools::install_github("bagasbgy/rucoin")
+# install.packages("remotes")
+remotes::install_github("bagasbgy/rucoin")
 ```
 
 ## Getting Started
@@ -39,7 +39,35 @@ First of all, let's start by importing the library:
 library(rucoin)
 ```
 
+### API Authorization
+
+Some function in this package requires private access and need a proper API key, secret, and passphrase. If you don't have any, or need more information, please visit the [Generating an API Key](https://docs.kucoin.com/#generating-an-api-key){target="_blank} section in the official API documentation.
+
+Current functions that need API authorization are:
+
+* `get_kucoin_balances()`
+* `post_kucoin_market_order()`
+
+#### Setting-up API Key
+
+To setup the API, the recommended way is using `.Renviron` file, which could be conveniently done using [`usethis::edit_r_environ()`](https://usethis.r-lib.org/reference/edit.html){target="_blank"}:
+
+```{r, eval=FALSE}
+# you can also use `scope = "project"` for local environment
+usethis::edit_r_environ(scope = "user")
+```
+
+In the `.Renviron` file, insert your API key details as follow:
+
+```
+KC-API-KEY = XXXXXXXXXX
+KC-API-SECRET = XXXXXXXXXX
+KC-API-PASSPHRASE = XXXXXXXXXX
+```
+
 ### Market Data
+
+**All market data is publicly accessible, and could be accessed without API authorization.**
 
 For getting historical data, you can use `get_kucoin_prices()`:
 
@@ -81,7 +109,36 @@ metadata <- get_kucoin_symbols()
 metadata
 ```
 
-## Further Development
+### Get User Information
 
-* API for market meta data
-* API for market orders
+**All user information data is private, and need API authorization.**
+
+To get the balance information, you can use `get_kucoin_balance()`:
+
+```{r, eval=FALSE}
+# get user's balance details
+balances <- get_kucoin_balances()
+
+# quick check
+balances
+```
+
+### Post an Order
+
+**All order posting functions are private, and need API authorization.**
+
+#### Market Order
+
+Here is an example of posting a market order:
+
+```{r, eval=FALSE}
+# post a market order: buy 1 KCS
+order_detail <- post_kucoin_market_order(
+  symbol = "KCS/BTC",
+  side = "buy",
+  base_size = 1
+)
+
+# quick check
+order_detail
+```

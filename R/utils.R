@@ -2,6 +2,9 @@
 
 #' @title Get current KuCoin API server time
 #'
+#' @param raw A `logical` vector to specify whether
+#'  to return a raw results or not. The default is `FALSE`.
+#'
 #' @return A `datetime` object
 #'
 #' @examples
@@ -13,13 +16,13 @@
 #'
 #' @export
 
-get_kucoin_time <- function() {
-
-  # get endpoint url
-  endpoint <- get_endpoint("time")
+get_kucoin_time <- function(raw = FALSE) {
 
   # get server response
-  response <- GET(glue("{endpoint}"))
+  response <- GET(
+    url = get_base_url(),
+    path = get_paths("time")
+  )
 
   # analyze response
   response <- analyze_response(response)
@@ -27,8 +30,19 @@ get_kucoin_time <- function() {
   # parse json result
   parsed <- fromJSON(content(response, "text"))
 
-  # convert to proper datetime
-  results <- as_datetime(floor(parsed$data / 1000))
+  # get timestamp
+  results <- as.numeric(parsed$data)
+
+  # parse datetime if raw == FALSE
+  if (!raw) {
+
+    # readjust result
+    results <- floor(parsed$data / 1000)
+
+    # convert to proper datetime
+    results <- as_datetime(results)
+
+  }
 
   # return the results
   results
