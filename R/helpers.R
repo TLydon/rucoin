@@ -149,6 +149,33 @@ prep_datetime_range <- function(from, to, frequency) {
 
 }
 
+prep_query_strings <- function(queries) {
+
+  # convert to query strings
+  if (length(queries) > 0) {
+
+    results <- c()
+
+    for (i in names(queries)) {
+
+      result <- paste(i, queries[[i]], sep = "=")
+
+      results <- c(results, result)
+
+    }
+
+    results <- paste0("?", paste0(results, collapse = "&"))
+
+  } else {
+
+    results <- ""
+
+  }
+
+  # return the results
+
+}
+
 # api base data -----------------------------------------------------------
 
 # paths/endpoints urls lookup
@@ -163,7 +190,7 @@ get_base_url <- function() {
 }
 
 # paths/endpoints urls lookup
-get_paths <- function(x, type = "path") {
+get_paths <- function(x, type = "path", append = NULL) {
 
   # lookup table
   lkp <- tribble(
@@ -180,6 +207,13 @@ get_paths <- function(x, type = "path") {
 
   # get specified endpoint
   results <- lkp[lkp$x == x, type]
+
+  # append if not null
+  if (!is.null(append)) {
+
+    results <- paste0(results, "/", append)
+
+  }
 
   # return the result
   results

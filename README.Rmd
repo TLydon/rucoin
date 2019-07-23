@@ -45,8 +45,9 @@ Some function in this package requires private access and need a proper API key,
 
 Current functions that need API authorization are:
 
-* `get_kucoin_balances()`
 * `post_kucoin_market_order()`
+* `get_kucoin_balances()`
+* `get_kucoin_order()`
 
 #### Setting-up API Key
 

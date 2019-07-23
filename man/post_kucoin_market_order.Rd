@@ -17,7 +17,8 @@ the order side: \code{"buy"} or \code{"sell"}.}
 the base or quote currency size.}
 }
 \value{
-A \code{tibble} containing order details
+If the transaction success, it will return
+a \code{character} vector which showing the order id
 }
 \description{
 Post a market order
@@ -52,7 +53,6 @@ order_detail <- post_kucoin_market_order(
 
 # quick check
 order_detail
-
 
 # post a market order: buy KCS worth 0.0001 BTC
 order_detail <- post_kucoin_market_order(

@@ -91,9 +91,11 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
 
       }
 
+      init_names <- colnames(result)
+
       result$symbol <- symbol
 
-      result <- result[, c("symbol", "datetime", "open", "high", "low", "close", "volume", "turnover")]
+      result <- result[, c("symbol", init_names)]
 
       result <- result[order(result$datetime), ]
 
@@ -130,8 +132,8 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
 # query klines (prices) data
 get_klines <- function(symbol, startAt, endAt, type) {
 
-  # list all query params
-  get_query <- list(
+  # prepare query params
+  query_params <- list(
     symbol = symbol,
     startAt = startAt,
     endAt = endAt,
@@ -142,7 +144,7 @@ get_klines <- function(symbol, startAt, endAt, type) {
   response <- GET(
     url = get_base_url(),
     path = get_paths("klines"),
-    query = get_query
+    query = query_params
   )
 
   # analyze response
@@ -204,17 +206,21 @@ get_kucoin_symbols <- function() {
   # tidy the parsed data
   results <- as_tibble(parsed$data, .name_repair = "minimal")
 
-  colnames(results) <- c("symbol", "quote_max_size", "enable_trading", "price_increment",
-                         "fee_currency", "base_max_size", "base_currency", "quote_currency",
-                         "market", "quote_increment", "base_min_size", "quote_min_size",
-                         "name", "base_increment")
+  colnames(results) <- c(
+    "symbol", "quote_max_size", "enable_trading", "price_increment",
+    "fee_currency", "base_max_size", "base_currency", "quote_currency",
+    "market", "quote_increment", "base_min_size", "quote_min_size",
+    "name", "base_increment"
+  )
 
-  results <- results[, c("symbol", "name", "enable_trading",
-                         "base_currency", "quote_currency",
-                         "base_min_size", "quote_min_size",
-                         "base_max_size", "quote_max_size",
-                         "base_increment", "quote_increment",
-                         "price_increment", "fee_currency")]
+  results <- results[, c(
+    "symbol", "name", "enable_trading",
+    "base_currency", "quote_currency",
+    "base_min_size", "quote_min_size",
+    "base_max_size", "quote_max_size",
+    "base_increment", "quote_increment",
+    "price_increment", "fee_currency"
+  )]
 
   results[, 6:12] <- lapply(results[, 6:12], as.numeric)
 

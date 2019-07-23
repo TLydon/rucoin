@@ -1,6 +1,6 @@
 # package description -----------------------------------------------------
 
-#' @title `rucoin`: An R API to KuCoin market data and market order
+#' @title `rucoin`: An R API to KuCoin Crytocurrency Exchange Market
 #'
 #' @docType package
 #'

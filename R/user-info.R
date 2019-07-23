@@ -2,6 +2,10 @@
 
 #' @title Get user's balance(s) list
 #'
+#' @param currency A `character` vector of one currency symbol (optional).
+#' @param type A `character` vector of one indicating
+#'  the `"main"` or `"trade"` account type (optional).
+#'
 #' @return A `tibble` containing balance details
 #'
 #' @examples
@@ -21,17 +25,44 @@
 #' # quick check
 #' balances
 #'
+#' # get user's balance details for BTC only
+#' balances <- get_kucoin_balances(
+#'   currency = "BTC"
+#' )
+#'
+#' # quick check
+#' balances
+#'
+#' # get user's balance details for trade account only
+#' balances <- get_kucoin_balances(
+#'   type = "trade"
+#' )
+#'
+#' # quick check
+#' balances
+#'
 #' }
 #'
 #' @export
 
-get_kucoin_balances <- function() {
+get_kucoin_balances <- function(currency = NULL, type = NULL) {
 
   # get current timestamp
   current_timestamp <- as.character(get_kucoin_time(raw = TRUE))
 
-  # prepare GET headers
-  sig <- paste0(current_timestamp, "GET", get_paths("accounts", type = "endpoint"))
+  # prepare query params
+  query_params <- list(
+    currency = currency,
+    type = type
+  )
+
+  query_params <- query_params[!sapply(query_params, is.null)]
+
+  # prepare query strings
+  query_strings <- prep_query_strings(query_params)
+
+  # prepare get headers
+  sig <- paste0(current_timestamp, "GET", get_paths("accounts", type = "endpoint"), query_strings)
   sig <- hmac(object = sig, algo = "sha256", key = Sys.getenv("KC-API-SECRET"), raw = TRUE)
   sig <- base64_enc(input = sig)
 
@@ -42,10 +73,11 @@ get_kucoin_balances <- function() {
     "KC-API-PASSPHRASE" = Sys.getenv("KC-API-PASSPHRASE")
   )
 
-  # GET server response
+  # get server response
   response <- GET(
     url = get_base_url(),
     path = get_paths("accounts"),
+    query = query_params,
     config = add_headers(.headers = get_header)
   )
 

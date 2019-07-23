@@ -4,7 +4,13 @@
 \alias{get_kucoin_balances}
 \title{Get user's balance(s) list}
 \usage{
-get_kucoin_balances()
+get_kucoin_balances(currency = NULL, type = NULL)
+}
+\arguments{
+\item{currency}{A \code{character} vector of one currency symbol (optional).}
+
+\item{type}{A \code{character} vector of one indicating
+the \code{"main"} or \code{"trade"} account type (optional).}
 }
 \value{
 A \code{tibble} containing balance details
@@ -25,6 +31,22 @@ library(rucoin)
 
 # get user's balance details
 balances <- get_kucoin_balances()
+
+# quick check
+balances
+
+# get user's balance details for BTC only
+balances <- get_kucoin_balances(
+  currency = "BTC"
+)
+
+# quick check
+balances
+
+# get user's balance details for trade account only
+balances <- get_kucoin_balances(
+  type = "trade"
+)
 
 # quick check
 balances
