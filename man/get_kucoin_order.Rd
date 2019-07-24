@@ -28,12 +28,12 @@ Get an order details
 library(rucoin)
 
 # get order details
-order_detail <- get_kucoin_order(
+order_details <- get_kucoin_order(
   order_ids = "insertorderid"
 )
 
 # quick check
-order_detail
+order_details
 
 }
 

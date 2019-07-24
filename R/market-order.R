@@ -23,44 +23,44 @@
 #' library(rucoin)
 #'
 #' # post a market order: buy 1 KCS
-#' order_detail <- post_kucoin_market_order(
+#' order_id <- post_kucoin_market_order(
 #'   symbol = "KCS/BTC",
 #'   side = "buy",
 #'   base_size = 1
 #' )
 #'
 #' # quick check
-#' order_detail
+#' order_id
 #'
 #' # post a market order: sell 1 KCS
-#' order_detail <- post_kucoin_market_order(
+#' order_id <- post_kucoin_market_order(
 #'   symbol = "KCS/BTC",
 #'   side = "sell",
 #'   base_size = 1
 #' )
 #'
 #' # quick check
-#' order_detail
+#' order_id
 #'
 #' # post a market order: buy KCS worth 0.0001 BTC
-#' order_detail <- post_kucoin_market_order(
+#' order_id <- post_kucoin_market_order(
 #'   symbol = "KCS/BTC",
 #'   side = "buy",
 #'   quote_size = 0.0001
 #' )
 #'
 #' # quick check
-#' order_detail
+#' order_id
 #'
 #' # post a market order: sell KCS worth 0.0001 BTC
-#' order_detail <- post_kucoin_market_order(
+#' order_id <- post_kucoin_market_order(
 #'   symbol = "KCS/BTC",
 #'   side = "sell",
 #'   base_size = 0.0001
 #' )
 #'
 #' # quick check
-#' order_detail
+#' order_id
 #'
 #' }
 #'
@@ -165,7 +165,7 @@ post_market_order <- function(symbol, side, size = NULL, funds = NULL) {
 
   # tidy the parsed data
   results <- as_tibble(parsed$data, .name_repair = "minimal")
-  results <- results[1, 1]
+  results <- results$orderId
 
   # return the result
   results
@@ -193,18 +193,21 @@ post_market_order <- function(symbol, side, size = NULL, funds = NULL) {
 #' library(rucoin)
 #'
 #' # get order details
-#' order_detail <- get_kucoin_order(
+#' order_details <- get_kucoin_order(
 #'   order_ids = "insertorderid"
 #' )
 #'
 #' # quick check
-#' order_detail
+#' order_details
 #'
 #' }
 #'
 #' @export
 
 get_kucoin_order <- function(order_ids) {
+
+  # force order id to unique
+  order_ids <- unique(order_ids)
 
   # get queried results
   if (length(order_ids) > 1) {
@@ -218,6 +221,8 @@ get_kucoin_order <- function(order_ids) {
       results <- rbind(results, result)
 
     }
+
+    results <- results[order(results$created_at), ]
 
   } else {
 

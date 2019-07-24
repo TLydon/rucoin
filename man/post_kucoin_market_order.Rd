@@ -35,44 +35,44 @@ Post a market order
 library(rucoin)
 
 # post a market order: buy 1 KCS
-order_detail <- post_kucoin_market_order(
+order_id <- post_kucoin_market_order(
   symbol = "KCS/BTC",
   side = "buy",
   base_size = 1
 )
 
 # quick check
-order_detail
+order_id
 
 # post a market order: sell 1 KCS
-order_detail <- post_kucoin_market_order(
+order_id <- post_kucoin_market_order(
   symbol = "KCS/BTC",
   side = "sell",
   base_size = 1
 )
 
 # quick check
-order_detail
+order_id
 
 # post a market order: buy KCS worth 0.0001 BTC
-order_detail <- post_kucoin_market_order(
+order_id <- post_kucoin_market_order(
   symbol = "KCS/BTC",
   side = "buy",
   quote_size = 0.0001
 )
 
 # quick check
-order_detail
+order_id
 
 # post a market order: sell KCS worth 0.0001 BTC
-order_detail <- post_kucoin_market_order(
+order_id <- post_kucoin_market_order(
   symbol = "KCS/BTC",
   side = "sell",
   base_size = 0.0001
 )
 
 # quick check
-order_detail
+order_id
 
 }
 
