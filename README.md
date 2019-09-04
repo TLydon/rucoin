@@ -131,7 +131,7 @@ metadata <- get_kucoin_symbols()
 
 # quick check
 metadata
-#> # A tibble: 450 x 13
+#> # A tibble: 461 x 13
 #>    symbol name  enable_trading base_currency quote_currency base_min_size
 #>    <chr>  <chr> <lgl>          <chr>         <chr>                  <dbl>
 #>  1 ACAT/… ACAT… TRUE           ACAT          BTC                    100  
@@ -144,7 +144,7 @@ metadata
 #>  8 ADB/E… ADB/… TRUE           ADB           ETH                     10  
 #>  9 AERGO… AERG… TRUE           AERGO         BTC                      0.1
 #> 10 AERGO… AERG… TRUE           AERGO         ETH                      0.1
-#> # … with 440 more rows, and 7 more variables: quote_min_size <dbl>,
+#> # … with 451 more rows, and 7 more variables: quote_min_size <dbl>,
 #> #   base_max_size <dbl>, quote_max_size <dbl>, base_increment <dbl>,
 #> #   quote_increment <dbl>, price_increment <dbl>, fee_currency <chr>
 ```

@@ -61,8 +61,6 @@
 
 get_kucoin_prices <- function(symbols, from, to, frequency) {
 
-  browser()
-
   # get datetime ranges
   times <- prep_datetime_range(
     from = as_datetime(from),
