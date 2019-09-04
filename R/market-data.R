@@ -61,6 +61,8 @@
 
 get_kucoin_prices <- function(symbols, from, to, frequency) {
 
+  browser()
+
   # get datetime ranges
   times <- prep_datetime_range(
     from = as_datetime(from),
@@ -87,19 +89,35 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
           type = prep_frequency(frequency)
         )
 
-        result <- rbind(result, queried)
+        if (nrow(queried) == 0) {
+
+          message(glue("No data for {symbol} {times$from[i]} to {times$to[i]}"))
+
+        } else {
+
+          result <- rbind(result, queried)
+
+        }
 
       }
 
-      init_names <- colnames(result)
+      if (nrow(result) == 0) {
 
-      result$symbol <- symbol
+        message(glue("Skipping data for {symbol}"))
 
-      result <- result[, c("symbol", init_names)]
+      } else {
 
-      result <- result[order(result$datetime), ]
+        init_names <- colnames(result)
 
-      results <- rbind(results, result)
+        result$symbol <- symbol
+
+        result <- result[, c("symbol", init_names)]
+
+        result <- result[order(result$datetime), ]
+
+        results <- rbind(results, result)
+
+      }
 
     }
 
@@ -118,9 +136,15 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
         type = prep_frequency(frequency)
       )
 
-      if (nrow(result) == 0) next
+      if (nrow(result) == 0) {
 
-      results <- rbind(results, result)
+        message(glue("No data for {symbols} {times$from[i]} to {times$to[i]}"))
+
+      } else {
+
+        results <- rbind(results, result)
+
+      }
 
     }
 
@@ -160,7 +184,7 @@ get_klines <- function(symbol, startAt, endAt, type) {
 
   if (nrow(results) == 0) {
 
-    warning("Specified symbols and period returning no data")
+    message("Specified symbols and period returning no data")
 
   } else {
 
