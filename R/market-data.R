@@ -118,6 +118,8 @@ get_kucoin_prices <- function(symbols, from, to, frequency) {
         type = prep_frequency(frequency)
       )
 
+      if (nrow(result) == 0) next
+
       results <- rbind(results, result)
 
     }
@@ -156,15 +158,23 @@ get_klines <- function(symbol, startAt, endAt, type) {
   # tidy the parsed data
   results <- as_tibble(parsed$data, .name_repair = "minimal")
 
-  colnames(results) <- c("datetime", "open", "close", "high", "low", "volume", "turnover")
+  if (nrow(results) == 0) {
 
-  results <- results[, c("datetime", "open", "high", "low", "close", "volume", "turnover")]
+    warning("Specified symbols and period returning no data")
 
-  results[, 1:7] <- lapply(results[, 1:7], as.numeric)
+  } else {
 
-  results$datetime <- as_datetime(results$datetime)
+    colnames(results) <- c("datetime", "open", "close", "high", "low", "volume", "turnover")
 
-  results <- results[order(results$datetime), ]
+    results <- results[, c("datetime", "open", "high", "low", "close", "volume", "turnover")]
+
+    results[, 1:7] <- lapply(results[, 1:7], as.numeric)
+
+    results$datetime <- as_datetime(results$datetime)
+
+    results <- results[order(results$datetime), ]
+
+  }
 
   # return the result
   results
