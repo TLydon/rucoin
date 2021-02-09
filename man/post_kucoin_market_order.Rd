@@ -4,8 +4,8 @@
 \alias{post_kucoin_market_order}
 \title{Post a market order}
 \usage{
-post_kucoin_market_order(symbol, side, base_size = NULL,
-  quote_size = NULL)
+post_kucoin_limit_order(symbol, side, size,
+  price)
 }
 \arguments{
 \item{symbol}{A \code{character} vector of one or more pair symbol.}
