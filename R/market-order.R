@@ -80,6 +80,8 @@ post_kucoin_limit_order <- function(symbol, side, size , price) {
       symbol = prep_symbols(symbol),
       side = side,
       size = format(size, scientific = FALSE)
+      price = price
+	)
  
   # return the result
   results
