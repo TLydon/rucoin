@@ -66,48 +66,6 @@
 #'
 #' @export
 
-post_kucoin_market_order <- function(symbol, side, base_size = NULL, quote_size = NULL) {
-
-  # get current timestamp
-  current_timestamp <- as.character(get_kucoin_time(raw = TRUE))
-
-  # get client id
-  clientOid <- base64_enc(as.character(current_timestamp))
-
-  if (!is.null(base_size) & !is.null(quote_size)) {
-
-    stop("Choose one from base_size or quote_size arguments!")
-
-  } else if (is.null(base_size) & is.null(quote_size)) {
-
-    stop("There is no specified size argument!")
-
-  }
-
-  # post market order
-  if (!is.null(base_size)) {
-
-    results <- post_market_order(
-      symbol = prep_symbols(symbol),
-      side = side,
-      size = format(base_size, scientific = FALSE)
-    )
-
-  } else {
-
-    results <- post_market_order(
-      symbol = prep_symbols(symbol),
-      side = side,
-      funds = format(quote_size, scientific = FALSE)
-    )
-
-  }
-
-  # return the result
-  results
-
-}
-
 post_kucoin_limit_order <- function(symbol, side, size , price) {
 
   # get current timestamp
@@ -187,6 +145,8 @@ post_limit_order <- function(symbol, side, size ,price) {
   # return the result
   results
   }
+
+
 
 
       
