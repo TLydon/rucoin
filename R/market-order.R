@@ -108,71 +108,7 @@ post_kucoin_market_order <- function(symbol, side, base_size = NULL, quote_size 
 
 }
 
-post_market_order <- function(symbol, side, size = NULL, funds = NULL) {
-
-  # get current timestamp
-  current_timestamp <- as.character(get_kucoin_time(raw = TRUE))
-
-  # get client id
-  clientOid <- base64_enc(as.character(current_timestamp))
-
-  # prepare post body
-  post_body <- list(
-    clientOid = clientOid,
-    symbol = symbol,
-    side = side,
-    type = "market",
-    size = size,
-    funds = funds
-  )
-
-  post_body <- post_body[!sapply(post_body, is.null)]
-
-  post_body_json <- toJSON(post_body, auto_unbox = TRUE)
-
-  # prepare post headers
-  sig <- paste0(current_timestamp, "POST", get_paths("orders", type = "endpoint"), post_body_json)
-  sig <- hmac(object = sig, algo = "sha256", key = Sys.getenv("KC-API-SECRET"), raw = TRUE)
-  sig <- base64_enc(input = sig)
-
-  post_header <- c(
-    "KC-API-KEY" = Sys.getenv("KC-API-KEY"),
-    "KC-API-SIGN" = sig,
-    "KC-API-TIMESTAMP" = current_timestamp,
-    "KC-API-PASSPHRASE" = Sys.getenv("KC-API-PASSPHRASE")
-  )
-
-  # post to server
-  response <- POST(
-    url = get_base_url(),
-    path = get_paths("orders"),
-    body = post_body,
-    encode = "json",
-    config = add_headers(.headers = post_header)
-  )
-
-  # analyze response
-  response <- analyze_response(response)
-
-  # parse json result
-  parsed <- fromJSON(content(response, "text"))
-
-  if (parsed$code != "200000") {
-
-    stop(glue("Got error/warning with message: {parsed$msg}"))
-
-  }
-
-  # tidy the parsed data
-  results <- as_tibble(parsed$data, .name_repair = "minimal")
-  results <- results$orderId
-
-  # return the result
-  results
-
-}
-
-post_kucoin_limit_order <- function(symbol, side, s) {
+post_kucoin_limit_order <- function(symbol, side, size , price) {
 
   # get current timestamp
   current_timestamp <- as.character(get_kucoin_time(raw = TRUE))
@@ -206,7 +142,7 @@ post_limit_order <- function(symbol, side, size ,price) {
     side = side,
     type = "limit",
     size = size,
-	price=price
+	price = price
   )
 
   post_body <- post_body[!sapply(post_body, is.null)]
@@ -251,6 +187,8 @@ post_limit_order <- function(symbol, side, size ,price) {
   # return the result
   results
   }
+
+
       
 # get order details -------------------------------------------------------
 
