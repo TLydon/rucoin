@@ -134,6 +134,14 @@ post_limit_order <- function(symbol, side, size , price ,time_in_force,cancel_af
     config = add_headers(.headers = post_header)
   )
 
+  # analyze response
+  response <- analyze_response(response)
+
+  # parse json result
+  parsed <- fromJSON(content(response, "text"))
+
+  if (parsed$code != "200000") {
+
     stop(glue("Got error/warning with message: {parsed$msg}"))
   }
   # tidy the parsed data
@@ -143,7 +151,6 @@ post_limit_order <- function(symbol, side, size , price ,time_in_force,cancel_af
   # return the result
   results
   }
-
 
 
 
