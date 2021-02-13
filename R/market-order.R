@@ -132,7 +132,7 @@ post_limit_order <- function(symbol, side, size , price ,time_in_force,cancel_af
     body = post_body,
     encode = "json",
     config = add_headers(.headers = post_header)
-  )s
+  )
 
     stop(glue("Got error/warning with message: {parsed$msg}"))
   }
