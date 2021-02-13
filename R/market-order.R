@@ -66,7 +66,7 @@
 #'
 #' @export
 
-post_kucoin_limit_order <- function(symbol, side, size , price) {
+post_kucoin_limit_order <- function(symbol, side, size , price,timeInForce,cancelAfter) {
 
   # get current timestamp
   current_timestamp <- as.character(get_kucoin_time(raw = TRUE))
@@ -80,14 +80,16 @@ post_kucoin_limit_order <- function(symbol, side, size , price) {
       symbol = prep_symbols(symbol),
       side = side,
       size = format(size, scientific = FALSE),
-      price = price
+      price = price,
+	timeInForce=timeInForce,
+	cancelAfter=cancelAfter
 	)
  
   # return the result
   results
 }
 
-post_limit_order <- function(symbol, side, size ,price) {
+post_limit_order <- function(symbol, side, size ,price,timeInForce,cancelAfter) {
 
   # get current timestamp
   current_timestamp <- as.character(get_kucoin_time(raw = TRUE))
@@ -102,7 +104,9 @@ post_limit_order <- function(symbol, side, size ,price) {
     side = side,
     type = "limit",
     size = size,
-	price = price
+	price = price,
+	  timeInForce=timeInForce,
+	cancelAfter=cancelAfter
   )
 
   post_body <- post_body[!sapply(post_body, is.null)]
@@ -128,15 +132,7 @@ post_limit_order <- function(symbol, side, size ,price) {
     body = post_body,
     encode = "json",
     config = add_headers(.headers = post_header)
-  )
-
-  # analyze response
-  response <- analyze_response(response)
-
-  # parse json result
-  parsed <- fromJSON(content(response, "text"))
-
-  if (parsed$code != "200000") {
+  )s
 
     stop(glue("Got error/warning with message: {parsed$msg}"))
   }
