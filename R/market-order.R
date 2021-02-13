@@ -66,7 +66,7 @@
 #'
 #' @export
 
-post_kucoin_limit_order <- function(symbol, side, size , price,time_in_force,cancel_after) {
+post_kucoin_limit_order <- function(symbol, side, size , price,timeInForce,cancel_after) {
 
   # get current timestamp
   current_timestamp <- as.character(get_kucoin_time(raw = TRUE))
@@ -81,7 +81,7 @@ post_kucoin_limit_order <- function(symbol, side, size , price,time_in_force,can
       side = side,
       size = format(size, scientific = FALSE),
       price = price,
-	time_in_force=time_in_force,
+	timeInForce=timeInForce,
 	cancel_after=cancel_after
 	)
  
@@ -89,7 +89,7 @@ post_kucoin_limit_order <- function(symbol, side, size , price,time_in_force,can
   results
 }
 
-post_limit_order <- function(symbol, side, size , price ,time_in_force,cancel_after) {
+post_limit_order <- function(symbol, side, size , price ,timeInForce,cancelAfter) {
 
   # get current timestamp
   current_timestamp <- as.character(get_kucoin_time(raw = TRUE))
@@ -106,7 +106,7 @@ post_limit_order <- function(symbol, side, size , price ,time_in_force,cancel_af
     size = size,
 	price = price,
 	  time_in_force=time_in_force,
-	cancel_after=cancel_after
+	cancelAfter=cancelAfter
   )
 
   post_body <- post_body[!sapply(post_body, is.null)]
